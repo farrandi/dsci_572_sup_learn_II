@@ -85,9 +85,43 @@ $$w_{t+1} = w_t - \alpha \nabla= L(w_t)$$
 
 ### GD with a Single Parameter
 
+- Loss function: $L(w) = \frac{1}{n} \sum_{i=1}^n (\hat{y}_i - y_i)^2$
+- Gradient: $\nabla L(w) = \frac{d}{dw} L(w) = \frac{2}{n} \sum_{i=1}^n x_{i1} (x_{i1} w_1 - y_i)$
+  - Or in Matrix form: $\nabla L(w) = \frac{2}{n} \mathbf{X}^T (\mathbf{X} \mathbf{w} - \mathbf{y})$
+
 ### GD with Multiple Parameters
+
+- Need to scale for the contour plot to be more "round"
+  - better for gradient descent
+
+<img src="images/2_contour_plot.png" width="600">
+
+- In real life, contour plots are not so nice
 
 ### Other Optimization Algorithms
 
-$$
-$$
+- Use `minimize` function from `scipy.optimize`
+
+```python
+from scipy.optimize import minimize
+
+def mse(w, X, y):
+    """Mean squared error."""
+    return np.mean((X @ w - y) ** 2)
+
+def mse_grad(w, X, y):
+    """Gradient of mean squared error."""
+    n = len(y)
+    return (2/n) * X.T @ (X @ w - y)
+
+out = minimize(mse, w, jac=mse_grad, args=(X_scaled_ones, toy_y), method="BFGS")
+# jac: function to compute the gradient (optional)
+# - will use finite difference approximation if not provided
+```
+
+- Other methods:
+  - `BFGS`: Broyden–Fletcher–Goldfarb–Shanno algorithm
+  - `CG`: Conjugate gradient algorithm
+  - `L-BFGS-B`: Limited-memory BFGS with bounds on the variables
+  - `SLSQP`: Sequential Least SQuares Programming
+  - `TNC`: Truncated Newton algorithm

@@ -28,6 +28,14 @@ $$L(w) = \frac{1}{n} \sum_{i=1}^n ((w_0 + w_1x_i) - y_i)^2$$
 
 So optimization is finding the values of $w_0$ and $w_1$ that minimize the loss function, $L(w)$.
 
+In vector format:
+
+$$\text{MSE} = \mathcal{L}(\mathbf{w}) = \frac{1}{n}\sum^{n}_{i=1}(\mathbf{x}_i \mathbf{w} - y_i)^2$$
+
+In full-matrix format
+
+$$\text{MSE} = \mathcal{L}(\mathbf{w}) = \frac{1}{n}(\mathbf{X} \mathbf{w} - \mathbf{y})^T (\mathbf{X} \mathbf{w} - \mathbf{y}) $$
+
 ### Notation
 
 $$
@@ -75,6 +83,14 @@ The goal is to find the weights $\mathbf{w}$ that minimize the loss function.
 
 - One of the most important optimization algorithms in ML
 - Iterative optimization algorithm
+- Steps:
+
+  1. start with some arbitrary $\mathbf{w}$
+
+  2. calculate the gradient using all training examples
+  3. use the gradient to adjust $\mathbf{w}$
+  4. repeat for $I$ iterations or until the step-size is sufficiently small
+
 - Cost: $O(ndt)$ for t iterations, better than brute force search $O(nd^2 + d^3)$
 
 $$w_{t+1} = w_t - \alpha \nabla= L(w_t)$$

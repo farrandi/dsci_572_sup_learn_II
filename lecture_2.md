@@ -114,6 +114,16 @@ $$w_{t+1} = w_t - \alpha \nabla= L(w_t)$$
 
 - In real life, contour plots are not so nice
 
+### General process
+
+<img src="images/2_gd.png" width="200">
+
+- **Initialization:** Start with an initial set of parameters, often randomly chosen.
+- **Forward pass:** Generate predictions using the current values of the parameters. (E.g., $\hat{y_i} = x_{1}w_1 + Bias$ in the toy example above)
+- **Loss calculation:** Evaluate the loss, which quantifies the discrepancy between the model's predictions and the actual target values.
+- **Gradient calculation:** Compute the gradient of the loss function with respect to each parameter either on a batch or the full dataset. This gradient indicates the direction in which the loss is increasing and its magnitude.
+- **Parameter Update**: Adjust the parameters in the opposite direction of the calculated gradient, scaled by the learning rate. This step aims to reduce the loss by moving the parameters toward values that minimize it.
+
 ### Other Optimization Algorithms
 
 - Use `minimize` function from `scipy.optimize`

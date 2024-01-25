@@ -79,6 +79,12 @@ $$
 
 The goal is to find the weights $\mathbf{w}$ that minimize the loss function.
 
+**Formulas:**
+
+$$\mathbf{y} = \mathbf{X} \mathbf{w}$$
+
+$$\hat{\mathbf{y}_i} = \mathbf{w}^T \mathbf{x}_i$$
+
 ## Gradient Descent
 
 - One of the most important optimization algorithms in ML

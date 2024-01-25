@@ -92,7 +92,7 @@ $$
 
 <img src="images/3_nn.png" width="600">
 
-_X : (n x d), W : (hs x d), b : (n x hs), where hs is the number of hidden nodes_
+_X : (n x d), W : (h x d), b : (n x h), where h is the number of hidden nodes_
 _b is actually 1 x hs, but we can think of it as n x hs because it is broadcasted_
 
 $$\mathbf{H}^{(1)} = \phi^{(1)} (\mathbf{X}\mathbf{W}^{(1)\text{T}} + \mathbf{b}^{(1)})$$

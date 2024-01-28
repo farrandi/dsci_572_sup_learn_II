@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>quiz_1_572_cs</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="quiz_1_572_cs_files/libs/clipboard/clipboard.min.js"></script>
+<script src="quiz_1_572_cs_files/libs/quarto-html/quarto.js"></script>
+<script src="quiz_1_572_cs_files/libs/quarto-html/popper.min.js"></script>
+<script src="quiz_1_572_cs_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="quiz_1_572_cs_files/libs/quarto-html/anchor.min.js"></script>
+<link href="quiz_1_572_cs_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="quiz_1_572_cs_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="quiz_1_572_cs_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="quiz_1_572_cs_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="quiz_1_572_cs_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+<section id="quiz-1-cs" class="level1">
+<h1>572 Quiz 1 CS</h1>
+<section id="rounding-errors-in-programming" class="level2">
+<h2 class="anchored" data-anchor-id="rounding-errors-in-programming">Rounding Errors in Programming</h2>
+<ul>
+<li>Infinite amount of numbers but finite amount of bits to represent them</li>
+<li>These small errors will accumulate and cause problems</li>
+</ul>
+<section id="why-is-this-relevant-in-ml" class="level3">
+<h3 class="anchored" data-anchor-id="why-is-this-relevant-in-ml">Why is this relevant in ML?</h3>
+<ul>
+<li>large datasets with millions of params</li>
+<li>small errors can accumulate and cause problems</li>
+</ul>
+</section>
+<section id="binary-numbers-and-integers" class="level3">
+<h3 class="anchored" data-anchor-id="binary-numbers-and-integers">Binary Numbers and Integers</h3>
+<ul>
+<li>Binary numbers are represented as a sum of powers of 2</li>
+<li>e.g.&nbsp;104 in binary is 1101000 = <span class="math inline">\(1(2^6) + 1(2^5) + 0(2^4) + 1(2^3) + 0(2^2) + 0(2^1) + 0(2^0) = 64 + 32 + 8 = 104\)</span></li>
+<li><strong>Unsigned Integers</strong>: <span class="math inline">\(2^n - 1\)</span> is the largest number that can be represented with n bits
+<ul>
+<li>e.g.&nbsp;8 bits can represent 0 to 255</li>
+<li><code>np.iinfo(np.uint8)</code> gives the min and max values</li>
+</ul></li>
+<li><strong>Signed Integers</strong>: <span class="math inline">\(2^{n-1} - 1\)</span> is the largest positive number that can be represented with n bits
+<ul>
+<li><span class="math inline">\(-2^{n-1}\)</span> is the smallest negative number that can be represented with n bits</li>
+<li>e.g.&nbsp;8 bits can represent -128 to 127 (0 is included in the positive numbers)</li>
+<li>1 bit is used to represent the sign</li>
+<li><code>np.iinfo(np.int8)</code> gives the min and max values</li>
+</ul></li>
+</ul>
+</section>
+<section id="fractional-numbers-in-binary" class="level3">
+<h3 class="anchored" data-anchor-id="fractional-numbers-in-binary">Fractional Numbers in Binary</h3>
+<ul>
+<li>14.75 in binary is 1110.11</li>
+</ul>
+<table class="table">
+<thead>
+<tr class="header">
+<th>2^3</th>
+<th>2^2</th>
+<th>2^1</th>
+<th>2^0</th>
+<th>2^-1</th>
+<th>2^-2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>4</td>
+<td>2</td>
+<td>0</td>
+<td>0.5</td>
+<td>0.25</td>
+</tr>
+</tbody>
+</table>
+<p>$ 8 + 4 + 2 + 0 + 0.5 + 0.25 = 14.75 $</p>
+</section>
+<section id="fixed-point-numbers" class="level3">
+<h3 class="anchored" data-anchor-id="fixed-point-numbers">Fixed Point Numbers</h3>
+<ul>
+<li>We typically have a fixed number of bits to represent the fractional part</li>
+<li>e.g.&nbsp;8 bits total, 4 bits for the integer part and 4 bits for the fractional part
+<ul>
+<li>max value is 15.9375 (<span class="math inline">\(2^3 + 2^2 + 2^1 + 2^0 + 2^{-1} + 2^{-2} + 2^{-3} + 2^{-4}\)</span>)
+<ul>
+<li>overflow if try a higher value</li>
+</ul></li>
+<li>min value (bigger than 0) is 0.0625 (<span class="math inline">\(2^{-4}\)</span>)
+<ul>
+<li>or precision of 0.0625 (any less =&gt; underflow)</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="floating-point-numbers" class="level3">
+<h3 class="anchored" data-anchor-id="floating-point-numbers">*Floating Point Numbers*</h3>
+<ul>
+<li>Rather than having a fixed location for the binary point, we let it “float” around.
+<ul>
+<li>like how we write 0.1234 as 1.234 x 10^-1</li>
+</ul></li>
+<li><strong>Format</strong>: <span class="math display">\[(-1)^S \times 1. M \times 2^E\]</span>
+<ul>
+<li>S is the sign bit</li>
+<li>M is the mantissa, always between 1 and 2 (1.0 is implied)</li>
+<li>E is the exponent</li>
+</ul></li>
+</ul>
+<p><em>Float 64</em> (double precision) <img src="../images/1_64float.png" width="400"></p>
+<p><em>Float 32</em> (single precision) <img src="../images/1_32float.png" width="400"></p>
+</section>
+<section id="rounding-errors-and-spacing" class="level3">
+<h3 class="anchored" data-anchor-id="rounding-errors-and-spacing">Rounding Errors and Spacing</h3>
+<section id="spacing" class="level4">
+<h4 class="anchored" data-anchor-id="spacing">Spacing</h4>
+<ul>
+<li>The spacing changes depending on the floating point number (because of the exponent)</li>
+</ul>
+<section id="ways-to-calculate-the-spacing" class="level5">
+<h5 class="anchored" data-anchor-id="ways-to-calculate-the-spacing">Ways to calculate the spacing</h5>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>np.spacing(<span class="fl">1e16</span>) <span class="co"># 1.0</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>np.nextafter(<span class="fl">1e16</span>, <span class="fl">2e16</span>) <span class="op">-</span> <span class="fl">1e16</span> <span class="co"># 1.0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+</section>
+<section id="examples" class="level3">
+<h3 class="anchored" data-anchor-id="examples">Examples</h3>
+<ul>
+<li><code>1.0 + 2.0 + 3.0 == 6.0</code> True</li>
+<li><code>0.1 + 0.2 == 0.3</code> False
+<ul>
+<li>0.1, 0.2, and 0.3 are not exactly representable in binary</li>
+</ul></li>
+<li><code>1e16 + 1 == 1e16</code> True
+<ul>
+<li>1 is less than the spacing, so it is rounded back</li>
+</ul></li>
+<li><code>1e16 + 2.0 == 1e16</code> False
+<ul>
+<li>2.0 is greater than the spacing, so it is rounded up</li>
+</ul></li>
+<li><code>1e16 + 1.0 + 1.0  == 1e16</code> True
+<ul>
+<li>1.0 is less than the spacing, so it is rounded back, then 1.0 is added, which is less than the spacing, so it is rounded back again</li>
+</ul></li>
+</ul>
+</section>
+</section>
+<section id="optimization" class="level2">
+<h2 class="anchored" data-anchor-id="optimization">Optimization</h2>
+<ul>
+<li>In ML, we want to minimize a loss function
+<ul>
+<li>typically a sum of losses over the training set</li>
+</ul></li>
+<li>Can think of ML as a 3 step process:
+<ol type="1">
+<li>Choose <strong>model</strong>: controls space of possible functions that map X to y</li>
+<li>Choose <strong>loss function</strong>: measures how well the model fits the data</li>
+<li>Choose <strong>optimization</strong> algorithm: finds the best model</li>
+</ol></li>
+</ul>
+<section id="optimization-terminology" class="level3">
+<h3 class="anchored" data-anchor-id="optimization-terminology">Optimization Terminology</h3>
+<ul>
+<li><strong>Optimization</strong>: process to min/max a function</li>
+<li><strong>Objective Function</strong>: function to be optimized</li>
+<li><strong>Domain</strong>: set to search for optimal value</li>
+<li><strong>Minimizer</strong>: value that minimizes the objective function</li>
+</ul>
+</section>
+<section id="loss-function" class="level3">
+<h3 class="anchored" data-anchor-id="loss-function">Loss Function</h3>
+<p>Common loss function is MSE (mean squared error):</p>
+<p><span class="math display">\[L(w) = \frac{1}{n} \sum_{i=1}^n (\hat{y}_i - y_i)^2\]</span></p>
+<p>Using a simple linear regression model <span class="math inline">\(y = w_0 + w_1x\)</span>, we can rewrite the loss function as:</p>
+<p><span class="math display">\[L(w) = \frac{1}{n} \sum_{i=1}^n ((w_0 + w_1x_i) - y_i)^2\]</span></p>
+<p>So optimization is finding the values of <span class="math inline">\(w_0\)</span> and <span class="math inline">\(w_1\)</span> that minimize the loss function, <span class="math inline">\(L(w)\)</span>.</p>
+<p>In vector format:</p>
+<p><span class="math display">\[\text{MSE} = \mathcal{L}(\mathbf{w}) = \frac{1}{n}\sum^{n}_{i=1}(\mathbf{x}_i \mathbf{w} - y_i)^2\]</span></p>
+<p>In full-matrix format</p>
+<p><span class="math display">\[\text{MSE} = \mathcal{L}(\mathbf{w}) = \frac{1}{n}(\mathbf{X} \mathbf{w} - \mathbf{y})^T (\mathbf{X} \mathbf{w} - \mathbf{y}) \]</span></p>
+</section>
+<section id="notation" class="level3">
+<h3 class="anchored" data-anchor-id="notation">Notation</h3>
+<p><span class="math display">\[
+\mathbf{y}=
+\left[
+\begin{array}{c} y_1 \\
+\vdots \\
+y_i \\
+\vdots\\
+y_n
+\end{array}
+\right]_{n \times 1}, \quad
+\mathbf{X}=
+\left[
+\begin{array}{c} \mathbf{x}_1 \\
+\vdots \\
+\mathbf{x}_i \\
+\vdots\\
+\mathbf{x}_n
+\end{array}
+\right]_{n \times d}
+= \left[\begin{array}{cccc}
+x_{11} &amp; x_{12} &amp; \cdots &amp; x_{1 d} \\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+x_{i 1} &amp; x_{i 2} &amp; \cdots &amp; x_{i d}\\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+x_{n 1} &amp; x_{n 2} &amp; \cdots &amp; x_{n d}
+\end{array}\right]_{n \times d},
+\quad
+\mathbf{w}=
+\left[
+\begin{array}{c} w_1 \\
+\vdots\\
+w_d
+\end{array}
+\right]_{d \times 1}
+\]</span></p>
+<ul>
+<li><span class="math inline">\(n\)</span>: number of examples</li>
+<li><span class="math inline">\(d\)</span>: number of input features/dimensions</li>
+</ul>
+<p>The goal is to find the weights <span class="math inline">\(\mathbf{w}\)</span> that minimize the loss function.</p>
+<p><strong>Formulas:</strong></p>
+<p><span class="math display">\[\mathbf{y} = \mathbf{X} \mathbf{w}\]</span></p>
+<p><span class="math display">\[\hat{\mathbf{y}_i} = \mathbf{w}^T \mathbf{x}_i\]</span></p>
+</section>
+</section>
+<section id="gradient-descent" class="level2">
+<h2 class="anchored" data-anchor-id="gradient-descent">Gradient Descent</h2>
+<ul>
+<li><p>One of the most important optimization algorithms in ML</p></li>
+<li><p>Iterative optimization algorithm</p></li>
+<li><p>Steps:</p>
+<ol type="1">
+<li><p>start with some arbitrary <span class="math inline">\(\mathbf{w}\)</span></p></li>
+<li><p>calculate the gradient using all training examples</p></li>
+<li><p>use the gradient to adjust <span class="math inline">\(\mathbf{w}\)</span></p></li>
+<li><p>repeat for <span class="math inline">\(I\)</span> iterations or until the step-size is sufficiently small</p></li>
+</ol></li>
+<li><p>Cost: <span class="math inline">\(O(ndt)\)</span> for t iterations, better than brute force search <span class="math inline">\(O(nd^2 + d^3)\)</span></p></li>
+</ul>
+<p><span class="math display">\[w_{t+1} = w_t - \alpha \nabla= L(w_t)\]</span></p>
+<ul>
+<li><span class="math inline">\(w_t\)</span>: current value of the weights</li>
+<li><span class="math inline">\(\alpha\)</span>: learning rate</li>
+<li><span class="math inline">\(\nabla L(w_t)\)</span>: gradient of the loss function at <span class="math inline">\(w_t\)</span></li>
+</ul>
+<section id="gd-with-a-single-parameter" class="level3">
+<h3 class="anchored" data-anchor-id="gd-with-a-single-parameter">GD with a Single Parameter</h3>
+<ul>
+<li>Loss function: <span class="math inline">\(L(w) = \frac{1}{n} \sum_{i=1}^n (\hat{y}_i - y_i)^2\)</span></li>
+<li>Gradient: <span class="math inline">\(\nabla L(w) = \frac{d}{dw} L(w) = \frac{2}{n} \sum_{i=1}^n x_{i1} (x_{i1} w_1 - y_i)\)</span>
+<ul>
+<li>Or in Matrix form: <span class="math inline">\(\nabla L(w) = \frac{2}{n} \mathbf{X}^T (\mathbf{X} \mathbf{w} - \mathbf{y})\)</span></li>
+</ul></li>
+</ul>
+</section>
+<section id="gd-with-multiple-parameters" class="level3">
+<h3 class="anchored" data-anchor-id="gd-with-multiple-parameters">GD with Multiple Parameters</h3>
+<ul>
+<li><p>Need to scale for the contour plot to be more “round”</p>
+<ul>
+<li>better for gradient descent</li>
+</ul></li>
+<li><p>In real life, contour plots are not so nice</p></li>
+</ul>
+</section>
+<section id="general-process" class="level3">
+<h3 class="anchored" data-anchor-id="general-process">General process</h3>
+<p><img src="../images/2_gd.png" width="200"></p>
+<ul>
+<li><strong>Initialization:</strong> Start with an initial set of parameters, often randomly chosen.</li>
+<li><strong>Forward pass:</strong> Generate predictions using the current values of the parameters. (E.g., <span class="math inline">\(\hat{y_i} = x_{1}w_1 + Bias\)</span> in the toy example above)</li>
+<li><strong>Loss calculation:</strong> Evaluate the loss, which quantifies the discrepancy between the model’s predictions and the actual target values.</li>
+<li><strong>Gradient calculation:</strong> Compute the gradient of the loss function with respect to each parameter either on a batch or the full dataset. This gradient indicates the direction in which the loss is increasing and its magnitude.</li>
+<li><strong>Parameter Update</strong>: Adjust the parameters in the opposite direction of the calculated gradient, scaled by the learning rate. This step aims to reduce the loss by moving the parameters toward values that minimize it.</li>
+</ul>
+</section>
+<section id="other-optimization-algorithms" class="level3">
+<h3 class="anchored" data-anchor-id="other-optimization-algorithms">Other Optimization Algorithms</h3>
+<ul>
+<li>Use <code>minimize</code> function from <code>scipy.optimize</code></li>
+</ul>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> minimize</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> mse(w, X, y):</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Mean squared error."""</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.mean((X <span class="op">@</span> w <span class="op">-</span> y) <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> mse_grad(w, X, y):</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Gradient of mean squared error."""</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="bu">len</span>(y)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (<span class="dv">2</span><span class="op">/</span>n) <span class="op">*</span> X.T <span class="op">@</span> (X <span class="op">@</span> w <span class="op">-</span> y)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>out <span class="op">=</span> minimize(mse, w, jac<span class="op">=</span>mse_grad, args<span class="op">=</span>(X_scaled_ones, toy_y), method<span class="op">=</span><span class="st">"BFGS"</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># jac: function to compute the gradient (optional)</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># - will use finite difference approximation if not provided</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li>Other methods:
+<ul>
+<li><code>BFGS</code>: Broyden–Fletcher–Goldfarb–Shanno algorithm</li>
+<li><code>CG</code>: Conjugate gradient algorithm</li>
+<li><code>L-BFGS-B</code>: Limited-memory BFGS with bounds on the variables</li>
+<li><code>SLSQP</code>: Sequential Least SQuares Programming</li>
+<li><code>TNC</code>: Truncated Newton algorithm</li>
+</ul></li>
+</ul>
+</section>
+</section>
+<section id="stochastic-gradient-descent" class="level2">
+<h2 class="anchored" data-anchor-id="stochastic-gradient-descent">Stochastic Gradient Descent</h2>
+<ul>
+<li>Instead of updating our parameters based on a gradient calculated using all training data, we simply use <strong>one of our data points</strong> (the <span class="math inline">\(i\)</span>-th one)</li>
+</ul>
+<p><strong>Gradient Descent</strong></p>
+<p>Loss function:</p>
+<p><span class="math display">\[\text{MSE} = \mathcal{L}(\mathbf{w}) = \frac{1}{n}\sum^{n}_{i=1} (\mathbf{x}_i \mathbf{w} - y_i)^2\]</span></p>
+<p>Update procedure:</p>
+<p><span class="math display">\[\mathbf{w}^{j+1} = \mathbf{w}^{j} - \alpha \nabla_\mathbf{w} \mathcal{L}(\mathbf{w}^{j})\]</span></p>
+<p><strong>Stochastic Gradient Descent</strong></p>
+<p>Loss function:</p>
+<p><span class="math display">\[\text{MSE}_i = \mathcal{L}_i(\mathbf{w}) = (\mathbf{x}_i \mathbf{w} - y_i)^2\]</span></p>
+<p>Update procedure: <span class="math display">\[\mathbf{w}^{j+1} = \mathbf{w}^{j} - \alpha \nabla_\mathbf{w} \mathcal{L}_i(\mathbf{w}^{j})\]</span></p>
+<section id="mini-batch-gradient-descent" class="level3">
+<h3 class="anchored" data-anchor-id="mini-batch-gradient-descent">Mini-batch Gradient Descent</h3>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Gradient Descent</th>
+<th>Stochastic Gradient Descent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Use all data points</td>
+<td>Use one data point</td>
+</tr>
+<tr class="even">
+<td>Slow</td>
+<td>Fast</td>
+</tr>
+<tr class="odd">
+<td>Accurate</td>
+<td>Less Accurate</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Mini-batch Gradient Descent</strong> is a (in-between) compromise between the two</li>
+<li>Instead of using a single data point, we use a small batch of data points d</li>
+</ul>
+<section id="mini-batch-creation" class="level4">
+<h4 class="anchored" data-anchor-id="mini-batch-creation">Mini-batch Creation</h4>
+<ol type="1">
+<li>Shuffle and divide all data into <span class="math inline">\(k\)</span> batches, every example is used once
+<ul>
+<li><strong>Default in PyTorch</strong></li>
+<li>An example will only show up in one batch</li>
+</ul></li>
+<li>Choose some examples for each batch <strong>without replacement</strong>
+<ul>
+<li>An example may show up in multiple batches</li>
+<li>The same example cannot show up in the same batch more than once</li>
+</ul></li>
+<li>Choose some examples for each batch <strong>with replacement</strong>
+<ul>
+<li>An example may show up in multiple batches</li>
+<li>The same example may show up in the same batch more than once</li>
+</ul></li>
+</ol>
+</section>
+</section>
+<section id="terminology" class="level3">
+<h3 class="anchored" data-anchor-id="terminology">Terminology</h3>
+<p>Assume we have a dataset of <span class="math inline">\(n\)</span> observations (also known as <em>rows, samples, examples, data points, or points</em>)</p>
+<ul>
+<li><p><strong>Iteration</strong>: each time you update model weights</p></li>
+<li><p><strong>Batch</strong>: a subset of data used in an iteration</p></li>
+<li><p><strong>Epoch</strong>: One full pass through the dataset to look at all <span class="math inline">\(n\)</span> observations</p></li>
+</ul>
+<p>In other words,</p>
+<ul>
+<li>In <strong>GD</strong>, each iteration involves computing the gradient over all examples, so</li>
+</ul>
+<p><span class="math display">\[1 \: \text{iteration} = 1 \: \text{epoch}\]</span></p>
+<ul>
+<li>In <strong>SGD</strong>, each iteration involves one data point, so</li>
+</ul>
+<p><span class="math display">\[n \text{ iterations} = 1 \: \text{epoch}\]</span></p>
+<ul>
+<li>In <strong>MGD</strong>, each iteration involves a batch of data, so</li>
+</ul>
+<p><span class="math display">\[
+\begin{align}
+\frac{n}{\text{batch size}} \text{iterations} &amp;= 1 \text{ epoch}\\
+\end{align}
+\]</span></p>
+<p><strong>*Note</strong>: nobody really says “minibatch SGD”, we just say SGD: in SGD you can specify a batch size of anything between 1 and <span class="math inline">\(n\)</span></p>
+</section>
+</section>
+<section id="neural-networks" class="level2">
+<h2 class="anchored" data-anchor-id="neural-networks">Neural Networks</h2>
+<ul>
+<li>Models that does a good job of approximating complex non-linear functions</li>
+<li>It is a sequence of layers, each of which is a linear transformation followed by a non-linear transformation</li>
+</ul>
+<section id="components" class="level3">
+<h3 class="anchored" data-anchor-id="components">Components</h3>
+<ul>
+<li><strong>Node (or neuron)</strong>: a single unit in a layer</li>
+<li><strong>Input layer</strong>: the features of the data</li>
+<li><strong>Hidden layer</strong>: the layer(s) between the input and output layers</li>
+<li><strong>Output layer</strong>: the prediction(s) of the model</li>
+<li><strong>Weights</strong>: the parameters of the model</li>
+<li><strong>Activation function</strong>: the non-linear transformation (e.g.&nbsp;ReLU, Sigmoid, Tanh, etc.)</li>
+</ul>
+<p><img src="../images/3_nn.png" width="600"></p>
+<p><em>X : (n x d), W : (h x d), b : (n x h), where h is the number of hidden nodes</em> <em>b is actually 1 x hs, but we can think of it as n x hs because it is broadcasted</em></p>
+<p><span class="math display">\[\mathbf{H}^{(1)} = \phi^{(1)} (\mathbf{X}\mathbf{W}^{(1)\text{T}} + \mathbf{b}^{(1)})\]</span></p>
+<p><span class="math display">\[\mathbf{H}^{(2)} = \phi^{(2)} (\mathbf{H}^{(1)}\mathbf{W}^{(2)\text{T}} + \mathbf{b}^{(2)})\]</span></p>
+<p><span class="math display">\[\mathbf{Y} = (\mathbf{H}^{(2)}\mathbf{W}^{(3)\text{T}} + \mathbf{b}^{(3)})\]</span></p>
+<ul>
+<li>In a layer, <span class="math display">\[\text{ num of weights} = \text{num of nodes in previous layer} \times \text{num of nodes in current layer}\]</span></li>
+</ul>
+<p><span class="math display">\[\text{num of biases} = \text{num of nodes in current layer}\]</span></p>
+<p><span class="math display">\[\text{num of parameters} = \text{num of weights} + \text{num of biases}\]</span></p>
+<section id="activation-functions" class="level4">
+<h4 class="anchored" data-anchor-id="activation-functions">Activation Functions</h4>
+<p><img src="../images/4_act_funcs.png" width="400"></p>
+</section>
+<section id="finding-gradient-of-loss-in-a-neural-network" class="level4">
+<h4 class="anchored" data-anchor-id="finding-gradient-of-loss-in-a-neural-network">Finding gradient of loss in a neural network</h4>
+<ul>
+<li><strong>Backpropagation</strong>: a method to calculate the gradient of the loss function with respect to the weights</li>
+<li><strong>Chain rule</strong>: a method to calculate the gradient of a function composed of multiple functions</li>
+<li>It is pretty complicated, but PyTorch does it for us</li>
+</ul>
+</section>
+</section>
+<section id="deep-learning" class="level3">
+<h3 class="anchored" data-anchor-id="deep-learning">Deep Learning</h3>
+<ul>
+<li>Neural networks with &gt; 1 hidden layer
+<ul>
+<li>NN with 1 hidden layer: shallow neural network</li>
+</ul></li>
+</ul>
+</section>
+</section>
+<section id="pytorch-for-neural-networks" class="level2">
+<h2 class="anchored" data-anchor-id="pytorch-for-neural-networks">PyTorch for Neural Networks</h2>
+<ul>
+<li>PyTorch is a popular open-source machine learning library by Facebook based on Torch</li>
+<li>It is a Python package that provides two high-level features:
+<ul>
+<li>Tensor computation (like NumPy) with strong GPU acceleration</li>
+<li>Gradient computation through automatic differentiation</li>
+</ul></li>
+</ul>
+<section id="tensors" class="level3">
+<h3 class="anchored" data-anchor-id="tensors">Tensors</h3>
+<ul>
+<li>Similar to <code>ndarray</code> in NumPy</li>
+</ul>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a tensor</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>]) <span class="co"># int</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="fl">5.</span>]) <span class="co"># float</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor([[<span class="dv">1</span>, <span class="dv">2</span>], [<span class="dv">3</span>, <span class="dv">4</span>], [<span class="dv">5</span>, <span class="dv">6</span>]])</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> torch.zeros(<span class="dv">3</span>, <span class="dv">2</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> torch.ones(<span class="dv">3</span>, <span class="dv">2</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> torch.rand(<span class="dv">3</span>, <span class="dv">2</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the shape, dimensions, and data type</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>x.shape</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>x.ndim</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>x.dtype</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Operations</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> torch.rand(<span class="dv">1</span>, <span class="dv">3</span>)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> torch.rand(<span class="dv">3</span>, <span class="dv">1</span>)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>a <span class="op">+</span> b <span class="co"># broadcasting</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>a <span class="op">*</span> b <span class="co"># element-wise multiplication</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>a <span class="op">@</span> b <span class="co"># matrix multiplication</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>a.mean()</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>a.<span class="bu">sum</span>()</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Indexing</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>a[<span class="dv">0</span>,:] <span class="co"># first row</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>a[<span class="dv">0</span>] <span class="co"># first row</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>a[:,<span class="dv">0</span>] <span class="co"># first column</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to NumPy</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>x.numpy()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="gpu-with-pytorch" class="level3">
+<h3 class="anchored" data-anchor-id="gpu-with-pytorch">GPU with PyTorch</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if GPU is available</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>torch.backends.mps.is_available() <span class="co"># mac M chips</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>torch.cuda.is_available() <span class="co"># Nvidia GPU</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># To activate GPU</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>device <span class="op">=</span> torch.device(<span class="st">'mps'</span> <span class="cf">if</span> torch.backends.mps.is_available() <span class="cf">else</span> <span class="st">'cpu'</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>x.to(<span class="st">'cpu'</span>) <span class="co"># move tensor to cpu</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="gradient-computation" class="level4">
+<h4 class="anchored" data-anchor-id="gradient-computation">Gradient Computation</h4>
+<ul>
+<li>use <code>backward()</code> to compute the gradient, backpropagation</li>
+</ul>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> torch.tensor([<span class="fl">1.0</span>, <span class="fl">2.0</span>, <span class="fl">3.0</span>], requires_grad<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> torch.tensor([<span class="fl">1.0</span>], requires_grad<span class="op">=</span><span class="va">True</span>)  <span class="co"># Random initial weight</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> torch.tensor([<span class="fl">2.0</span>, <span class="fl">4.0</span>, <span class="fl">6.0</span>], requires_grad<span class="op">=</span><span class="va">False</span>)  <span class="co"># Target values</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>mse <span class="op">=</span> ((X <span class="op">*</span> w <span class="op">-</span> y)<span class="op">**</span><span class="dv">2</span>).mean()</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>mse.backward()</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>w.grad</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="linear-regression-with-pytorch" class="level3">
+<h3 class="anchored" data-anchor-id="linear-regression-with-pytorch">Linear Regression with PyTorch</h3>
+<ul>
+<li>Every NN model has to inherit from <code>torch.nn.Module</code></li>
+</ul>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch <span class="im">import</span> nn</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> linearRegression(nn.Module):  <span class="co"># inherit from nn.Module</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, input_size, output_size):</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()  <span class="co"># call the constructor of the parent class</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.linear <span class="op">=</span> nn.Linear(input_size, output_size,)  <span class="co"># wX + b</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        out <span class="op">=</span> <span class="va">self</span>.linear(x)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> out</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a model</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> linearRegression(<span class="dv">1</span>, <span class="dv">1</span>) <span class="co"># input size, output size</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co"># View model</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>summary(model)</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="co">## Train the model</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>LEARNING_RATE <span class="op">=</span> <span class="fl">0.02</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> nn.MSELoss()  <span class="co"># loss function</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> torch.optim.SGD(model.parameters(), lr<span class="op">=</span>LEARNING_RATE)  <span class="co"># optimization algorithm is SGD</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="co"># DataLoader for mini-batch</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.utils.data <span class="im">import</span> DataLoader, TensorDataset</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>BATCH_SIZE <span class="op">=</span> <span class="dv">50</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>dataset <span class="op">=</span> TensorDataset(X_t, y_t)</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>dataloader <span class="op">=</span> DataLoader(dataset, batch_size<span class="op">=</span>BATCH_SIZE, shuffle<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Training</span></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> trainer(model, criterion, optimizer, dataloader, epochs<span class="op">=</span><span class="dv">5</span>, verbose<span class="op">=</span><span class="va">True</span>):</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Simple training wrapper for PyTorch network."""</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(epochs):</span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>        losses <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> X, y <span class="kw">in</span> dataloader:</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>            optimizer.zero_grad()       <span class="co"># Clear gradients w.r.t. parameters</span></span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>            y_hat <span class="op">=</span> model(X).flatten()  <span class="co"># Forward pass to get output</span></span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>            loss <span class="op">=</span> criterion(y_hat, y)  <span class="co"># Calculate loss</span></span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>            loss.backward()             <span class="co"># Getting gradients w.r.t. parameters</span></span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>            optimizer.step()            <span class="co"># Update parameters</span></span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>            losses <span class="op">+=</span> loss.item()       <span class="co"># Add loss for this batch to running total</span></span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> verbose: <span class="bu">print</span>(<span class="ss">f"epoch: </span><span class="sc">{</span>epoch <span class="op">+</span> <span class="dv">1</span><span class="sc">}</span><span class="ss">, loss: </span><span class="sc">{</span>losses <span class="op">/</span> <span class="bu">len</span>(dataloader)<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>trainer(model, criterion, optimizer, dataloader, epochs<span class="op">=</span><span class="dv">30</span>, verbose<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="non-linear-regression-with-pytorch" class="level3">
+<h3 class="anchored" data-anchor-id="non-linear-regression-with-pytorch">Non-linear Regression with PyTorch</h3>
+<ul>
+<li>use <code>torch.nn.Sequential</code> to create a model</li>
+</ul>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> nonlinRegression(nn.Module):</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, input_size, hidden_size, output_size):</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.main <span class="op">=</span> torch.nn.Sequential(</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>            nn.Linear(input_size, hidden_size),  <span class="co"># input -&gt; hidden layer</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>            nn.Sigmoid(),                        <span class="co"># sigmoid activation function in hidden layer</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_size, output_size)  <span class="co"># hidden -&gt; output layer</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> <span class="va">self</span>.main(x)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="common-criteria-and-optimizers-for-pytorch" class="level3">
+<h3 class="anchored" data-anchor-id="common-criteria-and-optimizers-for-pytorch">Common Criteria and Optimizers for PyTorch</h3>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Task</th>
+<th>Criterion (Loss)</th>
+<th>Optimizer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Regression</td>
+<td>MSELoss</td>
+<td>SGD</td>
+</tr>
+<tr class="even">
+<td>Binary Classification</td>
+<td>BCELoss</td>
+<td>Adam</td>
+</tr>
+<tr class="odd">
+<td>Multi-class Classification</td>
+<td>CrossEntropyLoss</td>
+<td>Adam</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># criterions</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch <span class="im">import</span> nn</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>reg_criterion <span class="op">=</span> torch.nn.MSELoss()</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>bc_criterion <span class="op">=</span> torch.nn.BCEWithLogitsLoss()</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>mse_criterion <span class="op">=</span> torch.nn.CrossEntropyLoss()</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># optimizers</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch <span class="im">import</span> optim</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>reg_optim <span class="op">=</span> torch.optim.SGD(model.parameters(), lr<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>class_optim <span class="op">=</span> torch.optim.Adam(model.parameters(), lr<span class="op">=</span>LEARNING_RATE)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

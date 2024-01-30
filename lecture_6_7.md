@@ -52,6 +52,8 @@ $$\text{output size} = \frac{\text{input size} - \text{kernel size} + 2 \times \
 
 ##### Dimensions of images and kernel tensors in PyTorch
 
+\<Insert diagram here\>
+
 - Images: `[batch_size, channels, height, width]`
 - Kernel: `[out_channels, in_channels, kernel_height, kernel_width]`
 
@@ -102,3 +104,86 @@ class CNN(torch.nn.Module):
         out = self.main(x)
         return out
 ```
+
+### Preparing Data
+
+#### Turning images to tensors
+
+- Normally there are 2 steps:
+  1. create a `dataset` object: the raw data
+  2. create a `dataloader` object: batches the data, shuffles, etc.
+- Use `torchvision` to load the data
+  - `torchvision.datasets.ImageFolder`: loads images from folders
+  - Assumes structure: `root/class_1/xxx.png`, `root/class_2/xxx.png`, ...
+
+```python
+import torch
+from torchvision import datasets, transforms
+
+IMAGE_SIZE = (256, 256)
+
+# create transform object
+data_transforms = transforms.Compose([
+    transforms.Resize(IMAGE_SIZE),
+    transforms.ToTensor()
+])
+
+# create dataset object
+train_dataset = datasets.ImageFolder(root='path/to/data', transform=data_transforms)
+
+# check out the data
+train_dataset.classes # list of classes
+train_dataset.targets # list of labels
+train_dataset.samples # list of (path, label) tuples
+
+# create dataloader object
+train_loader = torch.utils.data.DataLoader(
+    train_dataset,          # our raw data
+    batch_size=BATCH_SIZE,  # the size of batches we want the dataloader to return
+    shuffle=True,           # shuffle our data before batching
+    drop_last=False         # don't drop the last batch even if it's smaller than batch_size
+)
+
+# get a batch of data
+images, labels = next(iter(train_loader))
+```
+
+#### Saving and loading PyTorch models
+
+- [PyTorch documentation](https://pytorch.org/tutorials/beginner/saving_loading_models.html)
+- Convention: `.pt` or `.pth` file extension
+
+```python
+PATH = "models/eva_cnn.pt"
+
+# load model
+model = bitmoji_CNN() # must have defined the model class
+model.load_state_dict(torch.load(PATH))
+model.eval() # set model to evaluation mode (not training mode)
+
+# save model
+torch.save(model.state_dict(), PATH)
+```
+
+#### Data augmentation
+
+- To make CNN more robust to different images + increase the size of the dataset
+- Common augmentations:
+
+  - Crop
+  - Rotate
+  - Flip
+  - Color jitter
+
+```python
+data_transforms = transforms.Compose([
+    transforms.Resize(IMAGE_SIZE),
+    transforms.RandomVerticalFlip(p=0.5), # p=0.5 means 50% chance of applying this augmentation
+    transforms.RandomHorizontalFlip(p=0.5),
+    transforms.ToTensor()
+])
+```
+
+#### Batch Normalization (optional)
+
+### Hyperparameter Tuning

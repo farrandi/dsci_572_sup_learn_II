@@ -281,6 +281,8 @@ class nonlinRegression(nn.Module):
 | Binary Classification      | BCELoss          | Adam      |
 | Multi-class Classification | CrossEntropyLoss | Adam      |
 
+- Input of CrossEntropyLoss doesn't need to be normalized (i.e. no need to sum to 1/ no need to use `nn.Softmax`)
+
 ```python
 # criterions
 from torch import nn

@@ -170,6 +170,18 @@ def trainer(
     return results
 ```
 
+#### Using torchsummary
+
+- To get a summary of the model
+  - No need to manually calculate the output size of each layer
+
+```python
+from torchsummary import summary
+
+model = CNN()
+summary(model, (1, 256, 256))
+```
+
 ### Preparing Data
 
 #### Turning images to tensors

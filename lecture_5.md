@@ -13,7 +13,7 @@
 
   <img src="images/5_back1.png" width="600">
 
-  2. Do "backward pass" to calculate the gradients of the loss function with respect to the weights
+  2. Do "backward pass" to calculate the gradients of the loss function with respect to the weights. Below is an example of reverse-mode autmatic differentiation (backpropagation):
 
   <img src="images/5_back2.png" width="450">
 
@@ -72,12 +72,12 @@ optimizer.step() # update weights
 #### Preventing Overfitting
 
 - Add validation loss to the training loop
-- Early stopping: if we see the validation loss is increasing, we stop training
+- **Early stopping**: if we see the validation loss is increasing, we stop training
   - Define a patience parameter: if the validation loss increases for `patience` epochs, we stop training
-- Regularization: add a penalty term to the loss function to prevent overfitting
+- **Regularization**: add a penalty term to the loss function to prevent overfitting
   - See [573 notes](https://mds.farrandi.com/block_3/573_model_sel/573_model_sel#regularization) for more details
   - `weight_decay` parameter in the optimizer
-- Dropout: randomly set some neurons to 0 during training
+- **Dropout**: randomly set some neurons to 0 during training
   - It prevents overfitting by reducing the complexity of the model
   - `torch.nn.Dropout(0.2)`
 

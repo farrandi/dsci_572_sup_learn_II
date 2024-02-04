@@ -82,16 +82,6 @@ def trainer(model, criterion, optimizer, trainloader, validloader, epochs=5, pat
                 loss = criterion(y_hat, y_valid)  # Calculate loss based on output
                 valid_batch_loss += loss.item()
         valid_loss.append(valid_batch_loss / len(validloader))
-
-        # Early stopping
-        if epoch > 0 and valid_loss[-1] > valid_loss[-2]:
-            consec_increases += 1
-        else:
-            consec_increases = 0
-        if consec_increases == patience:
-            print(f"Stopped early at epoch {epoch + 1} - val loss increased for {consec_increases} consecutive epochs!")
-            break
-
     return train_loss, valid_loss
 ```
 
@@ -201,12 +191,7 @@ class CNN(torch.nn.Module):
             torch.nn.ReLU(), # activation function
             torch.nn.MaxPool2d((2, 2)),
 
-            torch.nn.Conv2d(in_channels=3,
-                out_channels=2,
-                kernel_size=(3, 3),
-                padding=1),
-            torch.nn.ReLU(),
-            torch.nn.MaxPool2d((2, 2)),
+            ...
 
             torch.nn.Flatten(),
             torch.nn.Linear(1250, 1)
@@ -257,11 +242,6 @@ data_transforms = transforms.Compose([
 
 # create dataset object
 train_dataset = datasets.ImageFolder(root='path/to/data', transform=data_transforms)
-
-# check out the data
-train_dataset.classes # list of classes
-train_dataset.targets # list of labels
-train_dataset.samples # list of (path, label) tuples
 
 # create dataloader object
 train_loader = torch.utils.data.DataLoader(
@@ -362,61 +342,6 @@ results = trainer(densenet, criterion, optimizer, train_loader, valid_loader, de
   1. Take output from pre-trained model
   2. Feed output to a new model
 
-```python
-def get_features(model, train_loader, valid_loader):
-    """
-    Extract features from both training and validation datasets using the provided model.
-
-    This function passes data through a given neural network model to extract features. It's designed
-    to work with datasets loaded using PyTorch's DataLoader. The function operates under the assumption
-    that gradients are not required, optimizing memory and computation for inference tasks.
-    """
-
-    # Disable gradient computation for efficiency during inference
-    with torch.no_grad():
-        # Initialize empty tensors for training features and labels
-        Z_train = torch.empty((0, 1024))  # Assuming each feature vector has 1024 elements
-        y_train = torch.empty((0))
-
-        # Initialize empty tensors for validation features and labels
-        Z_valid = torch.empty((0, 1024))
-        y_valid = torch.empty((0))
-
-        # Process training data
-        for X, y in train_loader:
-            # Extract features and concatenate them to the corresponding tensors
-            Z_train = torch.cat((Z_train, model(X)), dim=0)
-            y_train = torch.cat((y_train, y))
-
-        # Process validation data
-        for X, y in valid_loader:
-            # Extract features and concatenate them to the corresponding tensors
-            Z_valid = torch.cat((Z_valid, model(X)), dim=0)
-            y_valid = torch.cat((y_valid, y))
-
-    # Return the feature and label tensors
-    return Z_train, y_train, Z_valid, y_valid
-```
-
-Now we can use the extracted features to train a new model.
-
-```python
-# Extract features from the pre-trained model
-densenet = models.densenet121(weights='DenseNet121_Weights.DEFAULT')
-densenet.classifier = nn.Identity()  # remove that last "classification" layer
-Z_train, y_train, Z_valid, y_valid = get_features(densenet, train_loader, valid_loader)
-
-# Train a new model using the extracted features
-# Let's scale our data
-scaler = StandardScaler()
-Z_train = scaler.fit_transform(Z_train)
-Z_valid = scaler.transform(Z_valid)
-
-# Fit a model
-model = LogisticRegression(max_iter=1000)
-model.fit(Z_train, y_train)
-```
-
 ## Advanced CNN
 
 ### Generative vs Discriminative Models
@@ -442,54 +367,7 @@ model.fit(Z_train, y_train)
 #### Dimensionality Reduction
 
 - Maybe the z axis is unimportant in the input space for classification
-
-```python
-from torch import nn
-
-class autoencoder(torch.nn.Module):
-    def __init__(self, input_size, hidden_size):
-        super().__init__()
-        self.encoder = nn.Sequential(
-            nn.Linear(input_size, 2),
-            nn.Sigmoid()
-        )
-        self.decoder = nn.Sequential(
-            nn.Linear(2, input_size),
-            nn.Sigmoid()
-        )
-
-    def forward(self, x):
-        x = self.encoder(x)
-        x = self.decoder(x)
-        return x
-```
-
-```python
-# Set up the training
-BATCH_SIZE = 100
-torch.manual_seed(1)
-X_tensor = torch.tensor(X, dtype=torch.float32)
-dataloader = DataLoader(X_tensor,
-                        batch_size=BATCH_SIZE)
-model = autoencoder(3, 2)
-criterion = nn.MSELoss()
-optimizer = optim.Adam(model.parameters())
-
-# Train the model
-EPOCHS = 5
-
-for epoch in range(EPOCHS):
-    for batch in dataloader:
-        optimizer.zero_grad()           # Clear gradients w.r.t. parameters
-        y_hat = model(batch)            # Forward pass to get output
-        loss = criterion(y_hat, batch)  # Calculate loss
-        loss.backward()                 # Getting gradients w.r.t. parameters
-        optimizer.step()                # Update parameters
-
-# Use encoder
-model.eval()
-X_encoded = model.encoder(X_tensor)
-```
+- Only use `encoder` part of the autoencoder
 
 #### Denoising
 
@@ -497,69 +375,6 @@ X_encoded = model.encoder(X_tensor)
 - Use _Transposed Convolution Layers_ to upsample the input
   - Normal convolution: downsample (output is smaller than input)
   - Transposed convolution: upsample (output is larger than input)
-
-```python
-def conv_block(input_channels, output_channels):
-    return nn.Sequential(
-        nn.Conv2d(input_channels, output_channels, 3, padding=1),
-        nn.ReLU(),
-        nn.MaxPool2d(2)  # reduce x-y dims by two; window and stride of 2
-    )
-
-def deconv_block(input_channels, output_channels, kernel_size):
-    return nn.Sequential(
-        nn.ConvTranspose2d(input_channels, output_channels, kernel_size, stride=2),
-        nn.ReLU()
-    )
-
-class autoencoder(torch.nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.encoder = nn.Sequential(
-            conv_block(1, 32),
-            conv_block(32, 16),
-            conv_block(16, 8)
-        )
-        self.decoder = nn.Sequential(
-            deconv_block(8, 8, 3),
-            deconv_block(8, 16, 2),
-            deconv_block(16, 32, 2),
-            nn.Conv2d(32, 1, 3, padding=1)  # final conv layer to decrease channel back to 1
-        )
-
-    def forward(self, x):
-        x = self.encoder(x)
-        x = self.decoder(x)
-        x = torch.sigmoid(x)  # get pixels between 0 and 1
-        return x
-```
-
-````python
-# Set up the training
-EPOCHS = 20
-criterion = nn.MSELoss()
-optimizer = torch.optim.Adam(model.parameters())
-img_list = []
-
-for epoch in range(EPOCHS):
-    losses = 0
-    for batch, _ in trainloader:
-        noisy_batch = batch + noise * torch.randn(*batch.shape)
-        noisy_batch = torch.clip(noisy_batch, 0.0, 1.0)
-        optimizer.zero_grad()
-        y_hat = model(noisy_batch)
-        loss = criterion(y_hat, batch)
-        loss.backward()
-        optimizer.step()
-        losses += loss.item()
-    print(f"epoch: {epoch + 1}, loss: {losses / len(trainloader):.4f}")
-    # Save example results each epoch so we can see what's going on
-    with torch.no_grad():
-        noisy_8 = noisy_batch[:1, :1, :, :]
-        model_8 = model(input_8)
-        real_8 = batch[:1, :1, :, :]
-    img_list.append(utils.make_grid([noisy_8[0], model_8[0], real_8[0]], padding=1))```
-````
 
 ## Generative Adversarial Networks (GANs)
 
@@ -572,7 +387,7 @@ for epoch in range(EPOCHS):
 - Two networks:
   - Generator: creates new data
   - Discriminator: tries to distinguish between real and fake data
-- Both are battling each other:
+- "Adversarial" because both are battling each other:
   - Generator tries to create data that the discriminator can't distinguish from real data
   - Discriminator tries to distinguish between real and fake data
 
@@ -586,28 +401,21 @@ for epoch in range(EPOCHS):
    - Pass to discriminator and ask it to classify them (real or fake)
    - Pass judgement to a loss function (see how far it is from the ideal output)
      - ideal output: all fake images are classified as real
+     - high loss: discriminator is good at distinguishing between real and fake data
    - Do backpropagation and update the generator
 3. Repeat
+
+- **Goals**:
+
+  - Discriminator loss goes to 0.5 (can't distinguish between real and fake data)
+  - Generator loss goes to 0 (can generate data that looks like real data)
+
+- **Notes**:
+  - If discriminator is too good, the generator will never learn because there will be no opportunity to improve
 
 ### Pytorch Implementation
 
 1. Creating the data loader
-
-   ```python
-   DATA_DIR = "../input/face-recognition-dataset/Extracted Faces"
-
-   BATCH_SIZE = 64
-   IMAGE_SIZE = (128, 128)
-
-   data_transforms = transforms.Compose([
-       transforms.Resize(IMAGE_SIZE), # uses CPU (bottleneck)
-       transforms.ToTensor(),
-       transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
-   ])
-
-   dataset = datasets.ImageFolder(root=DATA_DIR, transform=data_transforms)
-   data_loader = torch.utils.data.DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True)
-   ```
 
 2. Creating the generator
 
@@ -635,36 +443,11 @@ for epoch in range(EPOCHS):
         return self.main(input)
    ```
 
-3. Creating the discriminator
-
-   ```python
-
-   class Discriminator(nn.Module):
-
-    def __init__(self):
-        super(Discriminator, self).__init__()
-
-        self.main = nn.Sequential(
-            nn.Conv2d(3, 128, kernel_size=4, stride=2, padding=1, bias=False),
-            nn.BatchNorm2d(128),
-            nn.LeakyReLU(0.2, inplace=True),
-
-            ...
-
-            nn.Conv2d(512, 1, kernel_size=4, stride=1, padding=0, bias=False),
-            nn.Flatten(),
-            nn.Sigmoid()
-        )
-
-    def forward(self, input):
-        return self.main(input)
-   ```
+3. Creating the discriminator (Always a binary classifier)
 
 4. Instantiating the models
 
    ```python
-   device = torch.device('mps' if torch.backends.mps.is_available() else 'cpu')
-
    LATENT_SIZE = 100
    generator = Generator(LATENT_SIZE).to(device)
    discriminator = Discriminator().to(device)
@@ -688,102 +471,7 @@ for epoch in range(EPOCHS):
 
 5. Training the GAN
 
-   ```python
-    img_list = []
-   fixed_noise = torch.randn(BATCH_SIZE, LATENT_SIZE, 1, 1).to(device)
-
-    NUM_EPOCHS = 50
-   from statistics import mean
-   print('Training started:\n')
-
-    D_real_epoch, D_fake_epoch, loss_dis_epoch, loss_gen_epoch = [], [], [], []
-
-    for epoch in range(NUM_EPOCHS):
-        D_real_iter, D_fake_iter, loss_dis_iter, loss_gen_iter = [], [], [], []
-
-        for real_batch, _ in data_loader:
-
-            # STEP 1: train discriminator
-            # ==================================
-            optimizerD.zero_grad()
-
-            real_batch = real_batch.to(device)
-            real_labels = torch.ones((real_batch.shape[0],), dtype=torch.float).to(device)
-
-            output = discriminator(real_batch).view(-1)
-            loss_real = criterion(output, real_labels)
-
-            # Iteration book-keeping
-            D_real_iter.append(output.mean().item())
-
-            # Train with fake data
-            noise = torch.randn(real_batch.shape[0], LATENT_SIZE, 1, 1).to(device)
-
-            fake_batch = generator(noise)
-            fake_labels = torch.zeros_like(real_labels)
-
-            output = discriminator(fake_batch.detach()).view(-1)
-            loss_fake = criterion(output, fake_labels)
-
-            # Update discriminator weights
-            loss_dis = loss_real + loss_fake
-            loss_dis.backward()
-            optimizerD.step()
-
-            # Iteration book-keeping
-            loss_dis_iter.append(loss_dis.mean().item())
-            D_fake_iter.append(output.mean().item())
-
-            # STEP 2: train generator
-            # ==================================
-            optimizerG.zero_grad()
-
-            # Calculate the output with the updated weights of the discriminator
-            output = discriminator(fake_batch).view(-1)
-            loss_gen = criterion(output, real_labels)
-            loss_gen.backward()
-
-            # Book-keeping
-            loss_gen_iter.append(loss_gen.mean().item())
-
-            # Update generator weights and store loss
-            optimizerG.step()
-
-        print(f"Epoch ({epoch + 1}/{NUM_EPOCHS})\t",
-            f"Loss_G: {mean(loss_gen_iter):.4f}",
-            f"Loss_D: {mean(loss_dis_iter):.4f}\t",
-            f"D_real: {mean(D_real_iter):.4f}",
-            f"D_fake: {mean(D_fake_iter):.4f}")
-
-        # Epoch book-keeping
-        loss_gen_epoch.append(mean(loss_gen_iter))
-        loss_dis_epoch.append(mean(loss_dis_iter))
-        D_real_epoch.append(mean(D_real_iter))
-        D_fake_epoch.append(mean(D_fake_iter))
-
-        # Keeping track of the evolution of a fixed noise latent vector
-        with torch.no_grad():
-            fake_images = generator(fixed_noise).detach().cpu()
-            #img_list.append(utils.make_grid(fake_images, normalize=True, nrows=10))
-
-    print("\nTraining ended.")
-   ```
-
 6. Visualize training process
-   ```python
-    plt.plot(np.array(loss_gen_epoch), label='loss_gen')
-    plt.plot(np.array(loss_dis_epoch), label='loss_dis')
-    plt.xlabel("Epoch")
-    plt.ylabel("Loss")
-    plt.legend();
-   ```
-   ```python
-    plt.plot(np.array(D_real_epoch), label='D_real')
-    plt.plot(np.array(D_fake_epoch), label='D_fake')
-    plt.xlabel("Epoch")
-    plt.ylabel("Probability")
-    plt.legend();
-   ```
 
 ### Multi-Input Networks
 

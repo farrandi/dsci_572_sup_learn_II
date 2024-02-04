@@ -7,11 +7,12 @@
 - Drastically reduces the number of params (compared to NN):
   - have activations depend on small number of inputs
   - same parameters (convolutional filter) are used for different parts of the image
+- Can capture spatial information (preserves the structure of the image)
 
 ### Convolution
 
 - Idea: use a small filter/kernel to extract features from the image
-  - Filter: a small matrix of weights
+  - Filter: a small matrix of weights (normally odd dimensioned -> for symmetry)
 
 <img src="images/6_conv.gif" width="250">
 
@@ -39,8 +40,8 @@ conv_1 = torch.nn.Conv2d(in_channels=1, out_channels=6, kernel_size=(3,3))
   - `in_channels`: number of input channels (gray scale image has 1 channel, RGB has 3)
   - `out_channels`: number of output channels (similar to hidden nodes in NN)
   - `kernel_size`: size of the filter
-  - stride: how many pixels to move the filter each time
-  - padding: how many pixels to add around the image
+  - `stride`: how many pixels to move the filter each time
+  - `padding`: how many pixels to add around the image
 
 <img src="images/6_conv_layer.png" width="350">
 
@@ -52,8 +53,6 @@ $$\text{output size} = \frac{\text{input size} - \text{kernel size} + 2 \times \
 
 ##### Dimensions of images and kernel tensors in PyTorch
 
-\<Insert diagram here\>
-
 - Images: `[batch_size, channels, height, width]`
 - Kernel: `[out_channels, in_channels, kernel_height, kernel_width]`
 
@@ -61,12 +60,13 @@ Note: before passing the image to the convolutional layer, we need to reshape it
 
 #### 2. Flattening
 
-- See the diagram above, its to go from `feature learning` -> `classification`
+- `feature learning` -> `classification`
+- Use `torch.nn.Flatten()` to flatten the image
 - At the end need to either do regression or classification
 
 #### 3. Pooling
 
-- IDea: reduce the size of the image
+- Idea: reduce the size of the image
   - less params
   - less overfitting
 - Common types:
@@ -86,7 +86,7 @@ class CNN(torch.nn.Module):
                 out_channels=3,
                 kernel_size=(3, 3),
                 padding=1),
-            torch.nn.ReLU(),
+            torch.nn.ReLU(), # activation function
             torch.nn.MaxPool2d((2, 2)),
 
             torch.nn.Conv2d(in_channels=3,
@@ -232,7 +232,7 @@ images, labels = next(iter(train_loader))
 - Convention: `.pt` or `.pth` file extension
 
 ```python
-PATH = "models/eva_cnn.pt"
+PATH = "models/my_cnn.pt"
 
 # load model
 model = bitmoji_CNN() # must have defined the model class
